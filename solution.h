@@ -1,8 +1,116 @@
 #include <iostream>
 #include "CircularArray.h"
 #include "stack.h"
+#include <map>
 
 using namespace std;
+
+
+string llamar_AND(string operador1, string operador2, map<string,list<int>>&keyWords){
+    list<int> lista1 = keyWords[operador1];
+    list<int> lista2 = keyWords[operador2];
+    list<int> resultado;
+    auto it1 = lista1.begin();
+    auto it2 = lista2.begin();
+    while(it1!=lista1.end() && it2!=lista2.end()){
+        if(*it1==*it2){
+            resultado.push_back(*it1);
+            it1++;
+            it2++;
+        }
+        else if(*it1<*it2){
+            it1++;
+        }
+        else{
+            it2++;
+        }
+    }
+    cout << "AND: ";
+    for(auto it=resultado.begin();it!=resultado.end();it++){
+        cout << *it << ",";
+    }
+    cout << endl;
+
+    keyWords["result"] = resultado;     //Creo una nueva llave en el map con el resultado de la operación
+    return "result";        //retorn "result" para diferenciar entre un operador normal y una respuesta que ya hice
+}
+
+string llamar_OR(string operador1, string operador2, map<string,list<int>>&keyWords){
+    list<int> lista1 = keyWords[operador1];
+    list<int> lista2 = keyWords[operador2];
+    list<int> resultado;
+    auto it1 = lista1.begin();
+    auto it2 = lista2.begin();
+    while(it1!=lista1.end() && it2!=lista2.end()){
+        if(*it1==*it2){
+            resultado.push_back(*it1);
+            it1++;
+            it2++;
+        }
+        else if(*it1<*it2){
+            resultado.push_back(*it1);
+            it1++;
+        }
+        else{
+            resultado.push_back(*it2);
+            it2++;
+        }
+    }
+
+    while(it1!=lista1.end()){
+        resultado.push_back(*it1);
+        it1++;
+    }
+
+    while(it2!=lista2.end()){
+        resultado.push_back(*it2);
+        it2++;
+    }
+
+    cout << "OR: ";
+    for(auto it=resultado.begin();it!=resultado.end();it++){
+        cout << *it << ",";
+    }
+    cout << endl;
+
+    keyWords["result"] = resultado;
+    return "result";
+}
+
+string llamar_ANDNOT(string operador1, string operador2, map<string,list<int>>&keyWords){
+    list<int> lista1 = keyWords[operador1];
+    list<int> lista2 = keyWords[operador2];
+    list<int> resultado;
+    auto it1 = lista1.begin();
+    auto it2 = lista2.begin();
+    while(it1!=lista1.end() && it2!=lista2.end()){
+        if(*it1==*it2){
+            it1++;
+            it2++;
+        }
+        else if(*it1<*it2){
+            resultado.push_back(*it1);
+            it1++;
+        }
+        else{
+            it2++;
+        }
+    }
+
+    while(it1!=lista1.end()){
+        resultado.push_back(*it1);
+        it1++;
+    }
+
+    cout << "ANDNOT: ";
+    for(auto it=resultado.begin();it!=resultado.end();it++){
+        cout << *it << ",";
+    }
+    cout << endl;
+
+    keyWords["result"] = resultado;
+    return "result";
+}
 
 struct Result{
     double result;
@@ -52,7 +160,7 @@ CircularArray<string> separarCadena(string input){
 }
 
 
-Result evaluate(string input)
+void evaluate(string input, map<string,list<int>>&keyWords)
 {
     Result resultado;
     resultado.error = false;
@@ -61,6 +169,21 @@ Result evaluate(string input)
     // "(5 + 10)/8.2"  -> "(","5","+","10",")","/","8.2"]  
     
     CircularArray<string>array = separarCadena(input); //descompongo en un circular array
+
+
+    //Busco palabras en el map que sean sufijos de mis operandos
+    int max_tamanio_raiz = 0;
+    for(auto it=keyWords.begin();it!=keyWords.end();++it){
+        for(int i=0;i<array.get_size();i++){
+            if(array[i].find(it->first)!=string::npos){
+                int tamanio_raiz = (it->first).length();
+                if(tamanio_raiz>max_tamanio_raiz){  //busco las raices con más caracteres en común con los operandos
+                    max_tamanio_raiz = tamanio_raiz;
+                    array[i] = it->first;
+                }
+            }
+        }
+    }
 
     //Imprimir el array
     cout << "Array  de cadenas separadas:" << endl;
@@ -94,7 +217,7 @@ Result evaluate(string input)
     }
 
     if(resultado.error==true) //Si ocurrió un error a este punto, retornar sin respuesta
-        return resultado;
+        throw("Error en la expresión ingresada");
 
     // 2- convertir de Infijo a Postfijo
     //  ["(","5","+","10",")","/","8.2"]   -> 5 10 + 8.2 /
@@ -170,41 +293,37 @@ Result evaluate(string input)
     // Si no está vacía ni tiene errores, se resuelve la expresión <---- Aca me quede. Falta:
     //- adaptarlo para que realice las operaciones AND, OR y ANDNOT. 
     //- Quitar stof porque ya no son números
-    Stack<float>operacion;
+    Stack<string>operacion;
     if(resultado.error)
         resultado.result=0;
     else{
         for(auto it=postfijo.begin();it!=postfijo.end();++it){
             if(*it!="AND" && *it!="OR" && *it!="ANDNOT") //si es un número se hace push
-                operacion.push(stof(*it));
+                operacion.push(*it);
             else{
-                if(operacion.size()<=1){
+                if(operacion.size()<=1){        //Si hay menos de 2 operandos, hay un error
                     
                     resultado.error=true;
                 }
                 else{
-                    float operador1 = operacion.pop();
-                float operador2 = operacion.pop();
-                if(*it=="+"){
-                    operacion.push(operador2+operador1);
-                }
-                else if(*it=="-"){
-                    operacion.push(operador2-operador1);
-                }
-                else if(*it=="*"){
-                    operacion.push(operador2*operador1);
-                }
-                else if(*it=="/"){
-                    operacion.push(operador2/operador1);
-                }
+                    string operador1 = operacion.pop();
+                    string operador2 = operacion.pop();
+                    if(*it=="AND"){
+                        string resultado = llamar_AND(operador1,operador2,keyWords); //retorna documentos que contengan ambos términos
+                        operacion.push(resultado);
+                    }
+                    else if(*it=="OR"){
+                        string resultado = llamar_OR(operador1,operador2,keyWords);  //retorna documentos que contengan al menos uno de los términos
+                        operacion.push(resultado);
+                    }
+                    else if(*it=="ANDNOT"){
+                        string resultado = llamar_ANDNOT(operador1,operador2,keyWords); //retorna documentos que contengan el primer término pero no el segundo
+                        operacion.push(resultado);
+                    }
                 }
                 
             }
         }
     }
 
-    resultado.result = operacion.pop();
-    
-
-    return resultado; //devuelve un objeto de tipo Result
 }
