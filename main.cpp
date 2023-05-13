@@ -61,21 +61,22 @@ int main(){
     printMap(keyWords);
 
 
-    //Envío consulta 1
-    string consulta = "(acud AND anill) OR ahor";
-    evaluate(consulta,keyWords);
+    //Envío consulta 1	
+    cout << "\t--Consulta 1--" << endl;
+    string consulta1 = "(acudir AND anillado) OR ahora";
+    evaluate(consulta1,keyWords);
 
     cout << "Resultados: " << endl;
-    list<int> resultados = keyWords["result"];
+    list<int> resultados1 = keyWords["result"];
 
-    for(auto it=resultados.begin();it!=resultados.end();it++){
+    for(auto it=resultados1.begin();it!=resultados1.end();it++){
         cout << *it << ",";
     }
     cout << endl;
 
-
-    //Envío consulta 2	
-    string consulta2 = "(acudir AND anillado) OR ahorro";
+    //Envío consulta 2
+    cout << "\t--Consulta 2--" << endl;
+    string consulta2 = "segundo ANDNOT (tortura OR viajero)";
     evaluate(consulta2,keyWords);
 
     cout << "Resultados: " << endl;
@@ -87,6 +88,18 @@ int main(){
     cout << endl;
 
 
-    //Funciona pero ahora necesio que funcione con palabras que tengan un sufijo en el map, no que sean iguales
+    //Envío consulta 3
+    cout << "\t--Consulta 3--" << endl;
+    string consulta3 = "(tambor OR refugiado) AND trampa";
+    evaluate(consulta3,keyWords);
+
+    cout << "Resultados: " << endl;
+    list<int> resultados3 = keyWords["result"];
+
+    for(auto it=resultados3.begin();it!=resultados3.end();it++){
+        cout << *it << ",";
+    }
+    cout << endl;
+
     return 0;
 }

@@ -127,14 +127,14 @@ CircularArray<string> separarCadena(string input){
             string s(1,input[i]); //convierto caracter a string con el constructor del std::string
             caracteres.push_back(s);
         }
+        else if(input.length()-(i+1)>=5 && input[i]=='A' && input[i+1]=='N' && input[i+2]=='D' && input[i+3]=='N' && input[i+4]=='O' && input[i+5]=='T'){
+            caracteres.push_back("ANDNOT");
+        }
         else if(input.length()-(i+1)>=3 && input[i]=='A' && input[i+1]=='N' && input[i+2]=='D'){
             caracteres.push_back("AND");
         }
         else if(input.length()-(i+1)>=2 && input[i]=='O' && input[i+1]=='R'){
             caracteres.push_back("OR");
-        }
-        else if(input.length()-(i+1)>=5 && input[i]=='A' && input[i+1]=='N' && input[i+2]=='D' && input[i+3]=='N' && input[i+4]=='O' && input[i+5]=='T'){
-            caracteres.push_back("ANDNOT");
         }
         else if(input[i]>=97 && input[i]<=122){ //Si es palabra en minuscula
             //recorrido desde el operando hasta que encuentre un espacio vacío, salga de la cadena o encuentre un operador (palabra mayuscula)
@@ -172,21 +172,35 @@ void evaluate(string input, map<string,list<int>>&keyWords)
 
 
     //Busco palabras en el map que sean sufijos de mis operandos
-    int max_tamanio_raiz = 0;
+    // int max_tamanio_raiz = 0;
+    map<string,int>max_raiz;
+    for(int i=0;i<array.get_size();i++){
+        max_raiz[array[i]] = 0;
+    }
+
     for(auto it=keyWords.begin();it!=keyWords.end();++it){
         for(int i=0;i<array.get_size();i++){
             if(array[i].find(it->first)!=string::npos){
                 int tamanio_raiz = (it->first).length();
-                if(tamanio_raiz>max_tamanio_raiz){  //busco las raices con más caracteres en común con los operandos
-                    max_tamanio_raiz = tamanio_raiz;
-                    array[i] = it->first;
+                if(tamanio_raiz>max_raiz[array[i]]){  //busco las raices con más caracteres en común con los operandos
+                    max_raiz[array[i]] = (it->first).length();
+                    // array[i] = it->first;
+                    // cout << "nueva raiz: " << array[i] << endl;
+                    // cout << "Tamanio de la nueva raiz: " << array[i].length() << endl;
                 }
             }
         }
     }
 
+    //Reemplazo los operandos por sus raices
+    for(int i=0;i<array.get_size();i++){
+        if(max_raiz[array[i]]!=0){
+            array[i] = array[i].substr(0,max_raiz[array[i]]);
+        }
+    }
+
     //Imprimir el array
-    cout << "Array  de cadenas separadas:" << endl;
+    cout << "Array de cadenas separadas:" << endl;
     for(auto it=array.begin();it!=array.end();++it){
         cout<<*it<<" ";
     }
