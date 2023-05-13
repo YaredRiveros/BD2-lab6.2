@@ -4,6 +4,19 @@
 
 
 ## Resultados obtenidos
+El archivo main.cpp ubicada en la carpeta "BD2-lab6.2" encontrará el programa que se encarga de leer el índice invertido "index.txt" generado en el paso anterior.
+
+El algoritmo que procesa la consulta se encuentra en solution.h ubicada en la misma carpeta. Está basado en la tarea "Evaluate Expressions" del curso AED, en el que se nos pedía verificar si una operación aritmética había sido introducida adecuadamente y devolver el resultado.
+
+Para cada consulta, se realizan las siguientes operaciones:
+
+1. Se toman las cadenas importantes (operadores y operandos) y se llevan a un vector
+2. Se buscan las raíces más próximas a los operandos introducidos.
+3. Se realizan validaciones para la forma infija.
+4. Se transforma de forma infija a postfija.
+5. Se revisa que se cierren todos los corchetes y paréntesis.
+6. Se resuelven todos los AND, OR y ANDNOT a partir de la forma postfija utilizando las funciones llamar_AND, llamar_OR y llamar_ANDNOT. Éstos últimos utilizan el algoritmo de mezcla para tener una complejidad de O(m), siendo m la cantidad de libros en las que aparece la keyWord.
+
 ### Consulta 1
 
 ![consulta1_cod](https://github.com/YaredRiveros/BD2-lab6.2/assets/83974222/c38d1cbe-8853-47f0-a433-bfb188031f3b)
