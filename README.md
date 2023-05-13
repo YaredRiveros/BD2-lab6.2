@@ -29,5 +29,7 @@ Para cada consulta, se realizan las siguientes operaciones:
 
 ### Consulta 3
 
+En este caso no hay resultados puesto que "trampa" (cuya raíz es tramp) solo aparece en el libro 1, mientras que tambor OR refugio aparecen en el libro 2 y 3, por ende el AND arroja un resultado nulo.
+
 ![image](https://github.com/YaredRiveros/BD2-lab6.2/assets/83974222/47004259-a4e0-4cfb-b6fe-2dc0f6d484a6)
 ![image](https://github.com/YaredRiveros/BD2-lab6.2/assets/83974222/5f8d6e95-94fa-4171-a3bd-01ee0848d7eb)
