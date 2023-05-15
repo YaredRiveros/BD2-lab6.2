@@ -15,7 +15,7 @@ El script de Python en `generarIndex` utiliza la biblioteca Natural Language Too
 
 5. Aplica el algoritmo de derivación ('stemming') a cada token y verifica si la palabra raíz resultante está en la lista de palabras de parada. Si no está en la lista, se añade a un diccionario, donde la clave es la palabra raíz y el valor es un conjunto de los identificadores de archivo en los que aparece la palabra.
 
-6.Reducción y ordenamiento de tokens: Limita el número de tokens al número especificado de las palabras raíz más frecuentes. Luego, ordena el diccionario alfabéticamente por palabra raíz.
+6. Reducción y ordenamiento de tokens: Limita el número de tokens al número especificado de las palabras raíz más frecuentes. Luego, ordena el diccionario alfabéticamente por palabra raíz.
 
 7. Escritura de resultados: Escribe los tokens y sus respectivos identificadores de archivo en un archivo de salida ('index.txt'). Cada línea del archivo de salida tiene el formato "token:lista_de_identificadores_de_archivo".
 
