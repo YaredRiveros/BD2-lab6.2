@@ -2,9 +2,25 @@
 
 ## Implementación del índice
 
+El script de Python en `generarIndex` utiliza la biblioteca Natural Language Toolkit (NLTK) para procesar texto en español. En específico, realiza la extracción y el almacenamiento de palabras raíces (o 'stems') de múltiples archivos de texto, excluyendo las palabras de parada (o 'stopwords'). Su funcionalidad es la siguiente:
+
+
+1. Lectura de las palabras de parada: Lee un archivo de palabras de parada ('stoplist.txt') y las almacena en un conjunto para su uso posterior.
+
+2. Procesamiento de archivos: Itera sobre cada archivo de texto (libro). Para cada archivo, realiza lo siguiente:
+
+3. Abre el archivo y tokeniza el texto en palabras individuales.
+
+4.  Filtra los tokens para excluir los que no son alfabéticos.
+
+5. Aplica el algoritmo de derivación ('stemming') a cada token y verifica si la palabra raíz resultante está en la lista de palabras de parada. Si no está en la lista, se añade a un diccionario, donde la clave es la palabra raíz y el valor es un conjunto de los identificadores de archivo en los que aparece la palabra.
+
+6.Reducción y ordenamiento de tokens: Limita el número de tokens al número especificado de las palabras raíz más frecuentes. Luego, ordena el diccionario alfabéticamente por palabra raíz.
+
+7. Escritura de resultados: Escribe los tokens y sus respectivos identificadores de archivo en un archivo de salida ('index.txt'). Cada línea del archivo de salida tiene el formato "token:lista_de_identificadores_de_archivo".
 
 ## Resultados obtenidos
-El archivo main.cpp ubicada en la carpeta "BD2-lab6.2" encontrará el programa que se encarga de leer el índice invertido "index.txt" generado en el paso anterior.
+El archivo `main.cpp` ubicada en la carpeta "BD2-lab6.2" encontrará el programa que se encarga de leer el índice invertido "index.txt" generado en el paso anterior.
 
 El algoritmo que procesa la consulta se encuentra en solution.h ubicada en la misma carpeta. Está basado en la tarea "Evaluate Expressions" del curso AED, en el que se nos pedía verificar si una operación aritmética había sido introducida adecuadamente y devolver el resultado.
 
